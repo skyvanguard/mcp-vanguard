@@ -1,0 +1,70 @@
+{
+  "name": "mcp-vanguard",
+  "version": "1.1.0",
+  "description": "Security pentesting MCP Server with Windows/WSL bridge for Claude integration",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "pentesting",
+    "security",
+    "claude",
+    "anthropic",
+    "wsl",
+    "kali",
+    "recon",
+    "osint",
+    "vulnerability-scanner",
+    "bug-bounty",
+    "nuclei",
+    "ffuf",
+    "nmap"
+  ],
+  "author": "skyvanguard",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skyvanguard/mcp-vanguard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skyvanguard/mcp-vanguard/issues"
+  },
+  "homepage": "https://github.com/skyvanguard/mcp-vanguard#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@vitest/coverage-v8": "^1.2.0",
+    "prettier": "^3.2.0",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "bin": {
+    "mcp-vanguard": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
+}

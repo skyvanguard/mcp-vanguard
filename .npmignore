@@ -1,0 +1,26 @@
+# Source (only publish dist)
+src/
+tsconfig.json
+
+# Development
+.github/
+.eslintrc*
+.prettierrc*
+*.config.js
+
+# Tests
+__tests__/
+*.test.ts
+*.spec.ts
+coverage/
+
+# Documentation (keep README)
+CONTRIBUTING.md
+CHANGELOG.md
+
+# IDE
+.idea/
+.vscode/
+
+# Examples
+mcp-config-example.json
