@@ -6,6 +6,15 @@ export enum PermissionTier {
   BLOCKED = 'BLOCKED'
 }
 
+export const ApiKeysSchema = z.object({
+  shodan: z.string().optional(),
+  virustotal: z.string().optional(),
+  securitytrails: z.string().optional(),
+  abuseipdb: z.string().optional(),
+  haveibeenpwned: z.string().optional(),
+  hunter: z.string().optional()
+}).default({});
+
 export const ConfigSchema = z.object({
   wslEnabled: z.boolean().default(true),
   wslDistro: z.string().default('kali-linux'),
@@ -13,7 +22,8 @@ export const ConfigSchema = z.object({
   maxConcurrent: z.number().default(3),
   timeout: z.number().default(300000),
   scope: z.array(z.string()).default([]),
-  outputDir: z.string().optional()
+  outputDir: z.string().optional(),
+  apiKeys: ApiKeysSchema
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
@@ -25,7 +35,8 @@ export const defaultConfig: Config = {
   maxConcurrent: 3,
   timeout: 300000,
   scope: [],
-  outputDir: undefined
+  outputDir: undefined,
+  apiKeys: {}
 };
 
 let currentConfig: Config = { ...defaultConfig };
@@ -73,34 +84,16 @@ export function isInScope(target: string): boolean {
   });
 }
 
-export const toolPermissions: Record<string, PermissionTier> = {
-  // SAFE - Passive reconnaissance
-  'vanguard_dns_records': PermissionTier.SAFE,
-  'vanguard_whois': PermissionTier.SAFE,
-  'vanguard_headers_check': PermissionTier.SAFE,
-  'vanguard_cert_search': PermissionTier.SAFE,
-  'vanguard_wayback': PermissionTier.SAFE,
-  'vanguard_tech_detect': PermissionTier.SAFE,
-  'vanguard_ssl_check': PermissionTier.SAFE,
-  'vanguard_cors_check': PermissionTier.SAFE,
-  'vanguard_robots_sitemap': PermissionTier.SAFE,
-  'vanguard_js_endpoints': PermissionTier.SAFE,
-  'vanguard_cve_lookup': PermissionTier.SAFE,
-  'vanguard_set_scope': PermissionTier.SAFE,
-  'vanguard_check_scope': PermissionTier.SAFE,
-  'vanguard_generate_report': PermissionTier.SAFE,
-  'vanguard_export_html': PermissionTier.SAFE,
-  'vanguard_audit_stats': PermissionTier.SAFE,
-
-  // DANGEROUS - Active scanning/probing
-  'vanguard_subdomain_enum': PermissionTier.DANGEROUS,
-  'vanguard_port_scan': PermissionTier.DANGEROUS,
-  'vanguard_ffuf': PermissionTier.DANGEROUS,
-  'vanguard_nuclei_scan': PermissionTier.DANGEROUS,
-  'vanguard_github_dorks': PermissionTier.DANGEROUS,
-  'vanguard_param_miner': PermissionTier.DANGEROUS
-};
-
+/**
+ * Get tool permission. Delegates to registry when available,
+ * falls back to BLOCKED for unknown tools.
+ *
+ * Note: After v2.0.0 refactor, permissions are defined per-tool
+ * in their ToolDefinition. This function is kept for backward
+ * compatibility and is used by server.ts via registry.getPermission().
+ */
 export function getToolPermission(toolName: string): PermissionTier {
-  return toolPermissions[toolName] ?? PermissionTier.BLOCKED;
+  // Lazy import to avoid circular dependency
+  // In v2.0.0+, server.ts uses registry.getPermission() directly
+  return PermissionTier.BLOCKED;
 }

@@ -9,6 +9,16 @@ const WSL_COMMAND_ALLOWLIST = new Set([
   'curl', 'wget', 'ping', 'traceroute', 'which', 'echo'
 ]);
 
+export function addToWSLAllowlist(commands: string[]): void {
+  for (const cmd of commands) {
+    WSL_COMMAND_ALLOWLIST.add(cmd.toLowerCase());
+  }
+}
+
+export function getWSLAllowlist(): string[] {
+  return [...WSL_COMMAND_ALLOWLIST];
+}
+
 export async function executeWSL(
   command: string,
   args: string[] = [],

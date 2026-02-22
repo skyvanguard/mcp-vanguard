@@ -16,6 +16,16 @@ const COMMAND_ALLOWLIST = new Set([
   'nslookup', 'ipconfig', 'netstat', 'curl', 'powershell'
 ]);
 
+export function addToAllowlist(commands: string[]): void {
+  for (const cmd of commands) {
+    COMMAND_ALLOWLIST.add(cmd.toLowerCase());
+  }
+}
+
+export function getAllowlist(): string[] {
+  return [...COMMAND_ALLOWLIST];
+}
+
 export async function executeWindows(
   command: string,
   args: string[] = [],
