@@ -17,6 +17,7 @@ import { utilsTools } from './tools/utils/index.js';
 import { networkTools } from './tools/network/index.js';
 import { exploitTools } from './tools/exploit/index.js';
 import { cryptoTools } from './tools/crypto/index.js';
+import { cloudTools } from './tools/cloud/index.js';
 
 // Register all tools
 registry.registerAll([
@@ -26,14 +27,15 @@ registry.registerAll([
   ...utilsTools,
   ...networkTools,
   ...exploitTools,
-  ...cryptoTools
+  ...cryptoTools,
+  ...cloudTools
 ]);
 
 export async function createServer(): Promise<Server> {
   const server = new Server(
     {
       name: 'mcp-vanguard',
-      version: '2.4.0'
+      version: '2.5.0'
     },
     {
       capabilities: {

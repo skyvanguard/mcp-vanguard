@@ -23,10 +23,11 @@ import { utilsTools } from '../src/tools/utils/index.js';
 import { networkTools } from '../src/tools/network/index.js';
 import { exploitTools } from '../src/tools/exploit/index.js';
 import { cryptoTools } from '../src/tools/crypto/index.js';
+import { cloudTools } from '../src/tools/cloud/index.js';
 
 // Register tools if not already registered
 try {
-  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools, ...cryptoTools]);
+  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools, ...cryptoTools, ...cloudTools]);
 } catch {
   // Already registered
 }
@@ -179,6 +180,20 @@ describe('Tool Permissions (via Registry)', () => {
       expect(registry.getPermission('vanguard_hash_crack')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_jwt_attack')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_password_gen')).toBe(PermissionTier.DANGEROUS);
+    });
+
+    it('should return SAFE for passive cloud tools', () => {
+      expect(registry.getPermission('vanguard_s3_bucket_check')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_azure_blob_check')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_gcp_bucket_check')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_firebase_check')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_cloud_enum')).toBe(PermissionTier.SAFE);
+    });
+
+    it('should return DANGEROUS for active cloud tools', () => {
+      expect(registry.getPermission('vanguard_cloud_metadata')).toBe(PermissionTier.DANGEROUS);
+      expect(registry.getPermission('vanguard_subdomain_takeover')).toBe(PermissionTier.DANGEROUS);
+      expect(registry.getPermission('vanguard_exposed_env_check')).toBe(PermissionTier.DANGEROUS);
     });
 
     it('should return BLOCKED for unknown tools', () => {
