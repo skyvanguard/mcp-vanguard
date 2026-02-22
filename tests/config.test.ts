@@ -25,10 +25,11 @@ import { exploitTools } from '../src/tools/exploit/index.js';
 import { cryptoTools } from '../src/tools/crypto/index.js';
 import { cloudTools } from '../src/tools/cloud/index.js';
 import { containerTools } from '../src/tools/container/index.js';
+import { analysisTools } from '../src/tools/analysis/index.js';
 
 // Register tools if not already registered
 try {
-  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools, ...cryptoTools, ...cloudTools, ...containerTools]);
+  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools, ...cryptoTools, ...cloudTools, ...containerTools, ...analysisTools]);
 } catch {
   // Already registered
 }
@@ -206,6 +207,18 @@ describe('Tool Permissions (via Registry)', () => {
       expect(registry.getPermission('vanguard_k8s_api')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_container_escape')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_registry_enum')).toBe(PermissionTier.DANGEROUS);
+    });
+
+    it('should return SAFE for passive analysis tools', () => {
+      expect(registry.getPermission('vanguard_vuln_correlate')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_attack_surface')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_risk_score')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_remediation_plan')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_encoding_detect')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_diff_report')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_timeline')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_scope_manager')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_report_gen')).toBe(PermissionTier.SAFE);
     });
 
     it('should return BLOCKED for unknown tools', () => {
