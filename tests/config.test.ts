@@ -24,10 +24,11 @@ import { networkTools } from '../src/tools/network/index.js';
 import { exploitTools } from '../src/tools/exploit/index.js';
 import { cryptoTools } from '../src/tools/crypto/index.js';
 import { cloudTools } from '../src/tools/cloud/index.js';
+import { containerTools } from '../src/tools/container/index.js';
 
 // Register tools if not already registered
 try {
-  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools, ...cryptoTools, ...cloudTools]);
+  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools, ...cryptoTools, ...cloudTools, ...containerTools]);
 } catch {
   // Already registered
 }
@@ -194,6 +195,17 @@ describe('Tool Permissions (via Registry)', () => {
       expect(registry.getPermission('vanguard_cloud_metadata')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_subdomain_takeover')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_exposed_env_check')).toBe(PermissionTier.DANGEROUS);
+    });
+
+    it('should return SAFE for passive container tools', () => {
+      expect(registry.getPermission('vanguard_helm_audit')).toBe(PermissionTier.SAFE);
+    });
+
+    it('should return DANGEROUS for active container tools', () => {
+      expect(registry.getPermission('vanguard_docker_socket')).toBe(PermissionTier.DANGEROUS);
+      expect(registry.getPermission('vanguard_k8s_api')).toBe(PermissionTier.DANGEROUS);
+      expect(registry.getPermission('vanguard_container_escape')).toBe(PermissionTier.DANGEROUS);
+      expect(registry.getPermission('vanguard_registry_enum')).toBe(PermissionTier.DANGEROUS);
     });
 
     it('should return BLOCKED for unknown tools', () => {
