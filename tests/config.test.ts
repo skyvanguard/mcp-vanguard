@@ -22,10 +22,11 @@ import { osintTools } from '../src/tools/osint/index.js';
 import { utilsTools } from '../src/tools/utils/index.js';
 import { networkTools } from '../src/tools/network/index.js';
 import { exploitTools } from '../src/tools/exploit/index.js';
+import { cryptoTools } from '../src/tools/crypto/index.js';
 
 // Register tools if not already registered
 try {
-  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools]);
+  registry.registerAll([...reconTools, ...webTools, ...osintTools, ...utilsTools, ...networkTools, ...exploitTools, ...cryptoTools]);
 } catch {
   // Already registered
 }
@@ -164,6 +165,20 @@ describe('Tool Permissions (via Registry)', () => {
       expect(registry.getPermission('vanguard_open_redirect_test')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_crlf_inject_test')).toBe(PermissionTier.DANGEROUS);
       expect(registry.getPermission('vanguard_deserialization_check')).toBe(PermissionTier.DANGEROUS);
+    });
+
+    it('should return SAFE for passive crypto tools', () => {
+      expect(registry.getPermission('vanguard_hash_identify')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_password_policy')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_jwt_decode')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_crypto_audit')).toBe(PermissionTier.SAFE);
+      expect(registry.getPermission('vanguard_base_decode')).toBe(PermissionTier.SAFE);
+    });
+
+    it('should return DANGEROUS for active crypto tools', () => {
+      expect(registry.getPermission('vanguard_hash_crack')).toBe(PermissionTier.DANGEROUS);
+      expect(registry.getPermission('vanguard_jwt_attack')).toBe(PermissionTier.DANGEROUS);
+      expect(registry.getPermission('vanguard_password_gen')).toBe(PermissionTier.DANGEROUS);
     });
 
     it('should return BLOCKED for unknown tools', () => {
