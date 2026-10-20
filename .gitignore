@@ -31,6 +31,10 @@ coverage/
 *.temp
 .cache/
 
+# Recon / scan output (may contain sensitive target data — never commit)
+.recon/
+*.recon/
+
 # Package manager locks (keep package-lock.json)
 yarn.lock
 pnpm-lock.yaml
