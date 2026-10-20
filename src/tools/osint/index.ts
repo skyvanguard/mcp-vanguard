@@ -135,6 +135,7 @@ export const osintTools: ToolDefinition[] = [
     schema: metadataExtractSchema,
     handler: metadataExtract,
     executionMode: 'native',
+    requiresScope: true,
     tags: ['metadata', 'scraping', 'technology']
   },
   {
@@ -155,6 +156,7 @@ export const osintTools: ToolDefinition[] = [
     schema: faviconHashSchema,
     handler: faviconHash,
     executionMode: 'native',
+    requiresScope: true,
     tags: ['favicon', 'hash', 'shodan', 'fingerprint']
   },
   {

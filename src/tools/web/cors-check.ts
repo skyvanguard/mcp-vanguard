@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const corsCheckSchema = z.object({
   url: z.string().describe('Target URL to check CORS configuration'),
@@ -45,6 +47,18 @@ export async function corsCheck(input: CorsCheckInput): Promise<{
 
   const results: CorsTestResult[] = [];
   const issues: CorsIssue[] = [];
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      url,
+      results,
+      issues,
+      summary: { totalTests: 0, allowedOrigins: 0, vulnerabilities: 0 },
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     for (const origin of origins) {

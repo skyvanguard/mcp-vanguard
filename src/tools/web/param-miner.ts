@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const paramMinerSchema = z.object({
   url: z.string().describe('Target URL to discover parameters'),
@@ -83,6 +85,17 @@ export async function paramMiner(input: ParamMinerInput): Promise<{
 
   const startTime = Date.now();
   const foundParams: FoundParameter[] = [];
+
+  const urlHost = extractHost(url);
+  if (!isInScope(urlHost)) {
+    return {
+      success: false,
+      url,
+      foundParams: [],
+      stats: { tested: 0, found: 0, duration: 0 },
+      error: `Target ${urlHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   let params: string[];
   if (customParams && customParams.length > 0) {

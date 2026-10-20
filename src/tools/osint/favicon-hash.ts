@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { createHash } from 'crypto';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const faviconHashSchema = z.object({
   url: z.string().describe('URL to fetch favicon from (will try /favicon.ico if no path)'),
@@ -22,6 +24,16 @@ export async function faviconHash(input: FaviconHashInput): Promise<{
   error?: string;
 }> {
   const { url, timeout } = input;
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      url,
+      hashes: {},
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   // Determine favicon URL
   let faviconUrl = url;

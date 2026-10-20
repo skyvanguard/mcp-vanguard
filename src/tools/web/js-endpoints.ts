@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const jsEndpointsSchema = z.object({
   url: z.string().describe('URL of JavaScript file or webpage to analyze'),
@@ -81,6 +83,16 @@ export async function jsEndpoints(input: JsEndpointsInput): Promise<{
     parameters: [],
     comments: []
   };
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      url,
+      result,
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const content = await fetchContent(url, timeout);

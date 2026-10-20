@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const metadataExtractSchema = z.object({
   url: z.string().describe('URL to extract metadata from (HTML page)'),
@@ -35,6 +37,16 @@ export async function metadataExtract(input: MetadataExtractInput): Promise<{
   error?: string;
 }> {
   const { url, timeout } = input;
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      url,
+      metadata: emptyMetadata(),
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const controller = new AbortController();

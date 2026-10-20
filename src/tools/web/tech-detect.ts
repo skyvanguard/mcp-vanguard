@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const techDetectSchema = z.object({
   url: z.string().describe('Target URL to detect technologies'),
@@ -242,6 +244,16 @@ export async function techDetect(input: TechDetectInput): Promise<{
   error?: string;
 }> {
   const { url, timeout } = input;
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      url,
+      technologies: [],
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const controller = new AbortController();

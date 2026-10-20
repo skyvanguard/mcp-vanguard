@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const robotsSitemapSchema = z.object({
   url: z.string().describe('Base URL of the target website'),
@@ -51,6 +53,18 @@ export async function robotsSitemap(input: RobotsSitemapInput): Promise<{
   const { url, parseRobots, parseSitemap, followSitemapLinks, maxUrls, timeout } = input;
 
   const baseUrl = url.replace(/\/+$/, '');
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      baseUrl,
+      robots: { found: false, rules: [], sitemaps: [] },
+      sitemap: { found: false, urls: [], totalUrls: 0 },
+      interestingPaths: [],
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
   let robotsRules: RobotsRule[] = [];
   let robotsSitemaps: string[] = [];
   let robotsFound = false;

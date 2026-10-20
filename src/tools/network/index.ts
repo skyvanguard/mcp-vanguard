@@ -160,6 +160,7 @@ export const networkTools: ToolDefinition[] = [
     schema: reverseDnsSchema,
     handler: reverseDnsLookup,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['dns', 'reverse', 'ptr']
   },
   {

@@ -46,6 +46,7 @@ export const webTools: ToolDefinition[] = [
     schema: headersCheckSchema,
     handler: headersCheck,
     executionMode: 'native',
+    requiresScope: true,
     tags: ['headers', 'security', 'http']
   },
   {
@@ -56,6 +57,7 @@ export const webTools: ToolDefinition[] = [
     schema: techDetectSchema,
     handler: techDetect,
     executionMode: 'native',
+    requiresScope: true,
     tags: ['technology', 'detection', 'fingerprint']
   },
   {
@@ -86,6 +88,7 @@ export const webTools: ToolDefinition[] = [
     schema: corsCheckSchema,
     handler: corsCheck,
     executionMode: 'native',
+    requiresScope: true,
     tags: ['cors', 'misconfiguration']
   },
   {
@@ -96,6 +99,7 @@ export const webTools: ToolDefinition[] = [
     schema: robotsSitemapSchema,
     handler: robotsSitemap,
     executionMode: 'native',
+    requiresScope: true,
     tags: ['robots', 'sitemap', 'discovery']
   },
   {
@@ -106,6 +110,7 @@ export const webTools: ToolDefinition[] = [
     schema: jsEndpointsSchema,
     handler: jsEndpoints,
     executionMode: 'native',
+    requiresScope: true,
     tags: ['javascript', 'endpoints', 'secrets']
   },
   {

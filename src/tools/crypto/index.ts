@@ -81,6 +81,7 @@ export const cryptoTools: ToolDefinition[] = [
     handler: passwordGen,
     executionMode: 'hybrid',
     wslCommands: ['cewl'],
+    requiresScope: true,
     tags: ['password', 'generator', 'wordlist', 'cewl'],
   },
   {

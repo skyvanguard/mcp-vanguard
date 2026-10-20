@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { randomBytes } from 'crypto';
-import { getConfig } from '../../config.js';
+import { getConfig, isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 import { executeWSL, checkWSLCommandExists } from '../../executor/wsl.js';
 
 export const passwordGenSchema = z.object({
@@ -55,6 +56,11 @@ export async function passwordGen(input: PasswordGenInput): Promise<{
   // Wordlist mode with CeWL
   if (!url) {
     return { success: false, mode: 'wordlist', passwords: [], count: 0, error: 'URL required for wordlist mode' };
+  }
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return { success: false, mode: 'wordlist', passwords: [], count: 0, error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.` };
   }
 
   const config = getConfig();

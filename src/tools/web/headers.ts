@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const headersCheckSchema = z.object({
   url: z.string().describe('Target URL to check security headers'),
@@ -146,6 +148,15 @@ export async function headersCheck(input: HeadersCheckInput): Promise<{
   error?: string;
 }> {
   const { url, followRedirects, timeout } = input;
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      result: null,
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const controller = new AbortController();
