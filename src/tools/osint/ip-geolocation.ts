@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const ipGeolocationSchema = z.object({
   ip: z.string().describe('IP address to geolocate'),
@@ -27,6 +29,11 @@ export async function ipGeolocation(input: IpGeolocationInput): Promise<{
   error?: string;
 }> {
   const { ip, timeout } = input;
+
+  const scopeHost = extractHost(ip);
+  if (!isInScope(scopeHost)) {
+    return { success: false, result: { ip }, error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.` };
+  }
 
   try {
     const controller = new AbortController();

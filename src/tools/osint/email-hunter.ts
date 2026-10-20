@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { getConfig } from '../../config.js';
+import { getConfig, isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const emailHunterSchema = z.object({
   domain: z.string().describe('Domain to search for email addresses'),
@@ -23,6 +24,17 @@ export async function emailHunter(input: EmailHunterInput): Promise<{
   error?: string;
 }> {
   const { domain, limit } = input;
+
+  const scopeHost = extractHost(domain);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      domain,
+      emails: [],
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
+
   const config = getConfig();
 
   // Try Hunter.io API if key available

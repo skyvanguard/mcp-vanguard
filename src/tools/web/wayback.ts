@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const waybackSchema = z.object({
   domain: z.string().describe('Domain to search in Wayback Machine'),
@@ -33,6 +35,18 @@ export async function waybackSearch(input: WaybackInput): Promise<{
   error?: string;
 }> {
   const { domain, matchType, filter, collapse, limit, from, to } = input;
+
+  const scopeHost = extractHost(domain);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      domain,
+      urls: [],
+      uniqueUrls: [],
+      stats: { total: 0, uniqueCount: 0 },
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const params = new URLSearchParams({

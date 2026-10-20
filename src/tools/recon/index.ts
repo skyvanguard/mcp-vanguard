@@ -38,6 +38,7 @@ export const reconTools: ToolDefinition[] = [
     schema: whoisSchema,
     handler: whoisLookup,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['whois', 'domain', 'ip']
   },
   {
@@ -48,6 +49,7 @@ export const reconTools: ToolDefinition[] = [
     schema: dnsRecordsSchema,
     handler: dnsRecords,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['dns', 'records']
   }
 ];

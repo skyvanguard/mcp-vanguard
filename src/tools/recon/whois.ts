@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const whoisSchema = z.object({
   target: z.string().describe('Domain or IP address to lookup')
@@ -25,6 +27,16 @@ export async function whoisLookup(input: WhoisInput): Promise<{
   error?: string;
 }> {
   const { target } = input;
+
+  const scopeHost = extractHost(target);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      target,
+      data: null,
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const url = `https://whois.arin.net/rest/ip/${encodeURIComponent(target)}`;

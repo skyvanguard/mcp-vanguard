@@ -68,6 +68,7 @@ export const webTools: ToolDefinition[] = [
     schema: waybackSchema,
     handler: waybackSearch,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['wayback', 'archive', 'history']
   },
   {

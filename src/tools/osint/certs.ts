@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const certSearchSchema = z.object({
   domain: z.string().describe('Domain to search in certificate transparency logs'),
@@ -33,6 +35,18 @@ export async function certSearch(input: CertSearchInput): Promise<{
   error?: string;
 }> {
   const { domain, includeExpired, includeSubdomains } = input;
+
+  const scopeHost = extractHost(domain);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      domain,
+      certificates: [],
+      uniqueDomains: [],
+      stats: { total: 0, expired: 0, active: 0, uniqueDomainsCount: 0 },
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const query = includeSubdomains ? `%.${domain}` : domain;

@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isIP } from 'node:net';
+import { isInScope } from '../../config.js';
 
 export const asnLookupSchema = z.object({
   query: z.string().describe('ASN number (e.g., "AS13335"), IP address, or organization name'),
@@ -23,6 +25,16 @@ export async function asnLookup(input: AsnLookupInput): Promise<{
   error?: string;
 }> {
   const { query, timeout } = input;
+
+  // Scope only applies when the query is an IP; ASN numbers and org names are not hosts.
+  if (isIP(query) !== 0 && !isInScope(query)) {
+    return {
+      success: false,
+      query,
+      results: [],
+      error: `Target ${query} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     // Detect query type

@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const webArchiveDiffSchema = z.object({
   url: z.string().describe('URL to check in the Wayback Machine'),
@@ -35,6 +37,17 @@ export async function webArchiveDiff(input: WebArchiveDiffInput): Promise<{
   error?: string;
 }> {
   const { url, fromDate, toDate, limit, timeout } = input;
+
+  const scopeHost = extractHost(url);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      url,
+      snapshots: [],
+      analysis: emptyAnalysis(),
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   try {
     const controller = new AbortController();

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { getConfig } from '../../config.js';
+import { getConfig, isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const shodanSearchSchema = z.object({
   query: z.string().describe('Shodan search query (e.g., "apache port:8080 country:US") or IP address'),
@@ -38,6 +39,20 @@ export async function shodanSearch(input: ShodanSearchInput): Promise<{
   error?: string;
 }> {
   const { query, searchType, limit, timeout } = input;
+
+  // Scope applies to a specific host lookup; free-form search queries are left open.
+  if (searchType === 'host') {
+    const scopeHost = extractHost(query);
+    if (!isInScope(scopeHost)) {
+      return {
+        success: false,
+        query,
+        results: [],
+        error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+      };
+    }
+  }
+
   const config = getConfig();
 
   if (!config.apiKeys.shodan) {

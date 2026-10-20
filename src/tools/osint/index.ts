@@ -25,6 +25,7 @@ export const osintTools: ToolDefinition[] = [
     schema: certSearchSchema,
     handler: certSearch,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['certificate', 'transparency', 'crt.sh']
   },
   {
@@ -55,6 +56,7 @@ export const osintTools: ToolDefinition[] = [
     schema: emailHunterSchema,
     handler: emailHunter,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['email', 'hunter', 'osint']
   },
   {
@@ -75,6 +77,7 @@ export const osintTools: ToolDefinition[] = [
     schema: domainReputationSchema,
     handler: domainReputation,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['reputation', 'threat', 'intelligence', 'virustotal']
   },
   {
@@ -85,6 +88,7 @@ export const osintTools: ToolDefinition[] = [
     schema: ipGeolocationSchema,
     handler: ipGeolocation,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['geolocation', 'ip', 'location']
   },
   {
@@ -95,6 +99,7 @@ export const osintTools: ToolDefinition[] = [
     schema: asnLookupSchema,
     handler: asnLookup,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['asn', 'bgp', 'network', 'prefix']
   },
   {
@@ -115,6 +120,7 @@ export const osintTools: ToolDefinition[] = [
     schema: shodanSearchSchema,
     handler: shodanSearch,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['shodan', 'iot', 'exposed', 'services']
   },
   {
@@ -125,6 +131,7 @@ export const osintTools: ToolDefinition[] = [
     schema: breachCheckSchema,
     handler: breachCheck,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['breach', 'haveibeenpwned', 'leak']
   },
   {
@@ -146,6 +153,7 @@ export const osintTools: ToolDefinition[] = [
     schema: dnsHistorySchema,
     handler: dnsHistory,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['dns', 'history', 'securitytrails']
   },
   {
@@ -167,6 +175,7 @@ export const osintTools: ToolDefinition[] = [
     schema: webArchiveDiffSchema,
     handler: webArchiveDiff,
     executionMode: 'api',
+    requiresScope: true,
     tags: ['wayback', 'archive', 'history', 'diff']
   }
 ];

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { getConfig } from '../../config.js';
+import { getConfig, isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const breachCheckSchema = z.object({
   query: z.string().describe('Email address or domain to check for breaches'),
@@ -30,6 +31,21 @@ export async function breachCheck(input: BreachCheckInput): Promise<{
   error?: string;
 }> {
   const { query, queryType, timeout } = input;
+
+  // For emails, scope is checked against the domain part.
+  const scopeTarget = queryType === 'email' ? (query.split('@')[1] ?? query) : query;
+  const scopeHost = extractHost(scopeTarget);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      query,
+      breaches: [],
+      totalBreaches: 0,
+      totalExposedRecords: 0,
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
+
   const config = getConfig();
 
   // Try HIBP API if key available

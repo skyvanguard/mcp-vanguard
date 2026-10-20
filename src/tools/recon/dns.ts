@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const dnsRecordsSchema = z.object({
   domain: z.string().describe('Domain to query DNS records'),
@@ -23,6 +25,16 @@ export async function dnsRecords(input: DnsRecordsInput): Promise<{
   error?: string;
 }> {
   const { domain, recordTypes } = input;
+
+  const scopeHost = extractHost(domain);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      domain,
+      records: [],
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
 
   const records: DnsRecord[] = [];
   const errors: string[] = [];

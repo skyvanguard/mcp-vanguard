@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { getConfig } from '../../config.js';
+import { getConfig, isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const dnsHistorySchema = z.object({
   domain: z.string().describe('Domain to lookup DNS history'),
@@ -26,6 +27,18 @@ export async function dnsHistory(input: DnsHistoryInput): Promise<{
   error?: string;
 }> {
   const { domain, recordType, timeout } = input;
+
+  const scopeHost = extractHost(domain);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      domain,
+      recordType,
+      history: [],
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
+
   const config = getConfig();
 
   // Try SecurityTrails if key available

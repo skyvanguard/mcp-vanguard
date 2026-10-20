@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { getConfig } from '../../config.js';
+import { getConfig, isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 
 export const domainReputationSchema = z.object({
   domain: z.string().describe('Domain to check reputation'),
@@ -24,6 +25,18 @@ export async function domainReputation(input: DomainReputationInput): Promise<{
   error?: string;
 }> {
   const { domain, timeout } = input;
+
+  const scopeHost = extractHost(domain);
+  if (!isInScope(scopeHost)) {
+    return {
+      success: false,
+      domain,
+      overallRisk: 'unknown',
+      sources: [],
+      error: `Target ${scopeHost} is not in scope. Use vanguard_set_scope to add it.`
+    };
+  }
+
   const config = getConfig();
   const sources: ReputationSource[] = [];
 
