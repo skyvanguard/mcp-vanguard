@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/skyvanguard/mcp-vanguard#readme",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "zod": "^3.23.0"
   },
   "devDependencies": {
