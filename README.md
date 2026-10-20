@@ -1,7 +1,7 @@
 # mcp-vanguard
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
 [![Tools](https://img.shields.io/badge/Tools-89-orange.svg)](#tools-89-total)
@@ -294,7 +294,7 @@ vanguard_report_gen with title "Security Assessment" and findings
 npm install        # Install dependencies
 npm run build      # Build TypeScript
 npm run dev        # Watch mode
-npm test           # Run 178 tests
+npm test           # Run 195 tests
 npm run test:coverage  # Coverage report
 npm run format     # Format code
 ```
@@ -364,7 +364,7 @@ mcp-vanguard/
 
 | Requirement | Version |
 |-------------|---------|
-| Node.js | 18+ |
+| Node.js | 20+ |
 | TypeScript | 5.0+ (dev) |
 
 **Optional (for active scanning via WSL):**
