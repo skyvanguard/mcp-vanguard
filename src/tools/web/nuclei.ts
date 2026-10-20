@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isInScope, getConfig } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 import { executeWindows, checkCommandExists } from '../../executor/windows.js';
 import { executeWSL, checkWSLCommandExists } from '../../executor/wsl.js';
 
@@ -231,12 +232,3 @@ function parseNucleiJsonlOutput(output: string): NucleiResult[] {
   return results;
 }
 
-function extractHost(url: string): string {
-  try {
-    const parsed = new URL(url);
-    return parsed.hostname;
-  } catch {
-    const match = url.match(/https?:\/\/([^/:]+)/);
-    return match ? match[1] : url;
-  }
-}

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isInScope } from '../../config.js';
+import { extractHost } from '../../utils/url.js';
 import { executeWindows, checkCommandExists } from '../../executor/windows.js';
 import { executeWSL, checkWSLCommandExists } from '../../executor/wsl.js';
 import { getConfig } from '../../config.js';
@@ -270,12 +271,3 @@ function parseFfufJsonOutput(output: string): {
   return { results, requestsSent };
 }
 
-function extractHost(url: string): string {
-  try {
-    const parsed = new URL(url.replace('FUZZ', 'test'));
-    return parsed.hostname;
-  } catch {
-    const match = url.match(/https?:\/\/([^/:]+)/);
-    return match ? match[1] : url;
-  }
-}
